@@ -1,9 +1,10 @@
-import React, { useState, useContext } from "react";
-import { FormContext } from "../context/FormContext"; // Ensure correct path
+import React, { useState, useEffect, useContext } from "react";
+import { FormContext } from "../context/FormContext";
 import { GiDivingHelmet } from "react-icons/gi";
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
-import 'react-vertical-timeline-component/style.min.css'; // Make sure to import the CSS
-import TripCard from "./TripCard"; // Import your existing TripCard component
+import 'react-vertical-timeline-component/style.min.css';
+import TripCard from "./TripCard";
+import LocationSearch from "./LocationSearch";  // Location search component
 
 const trips = [
     {
@@ -27,22 +28,39 @@ const trips = [
 ];
 
 const Timeline = () => {
-    // Ensure useContext is accessing FormContext properly
-    const { formData, handleFormSubmit, handleEditPost, isModalOpen, handleModalClose, handleModalOpen, } = useContext(FormContext);
+    const { formData, handleInputChange, handleFormSubmit, handleEditPost, isModalOpen, handleModalClose, handleModalOpen } = useContext(FormContext);
+    const [selectedImages, setSelectedImages] = useState([]);
+    const [location, setLocation] = useState(null);
+
+    const handleImageChange = (e) => {
+        const files = Array.from(e.target.files);
+        if (selectedImages.length + files.length > 8) {
+            alert("You can only upload up to 8 images.");
+            return;
+        }
+        setSelectedImages([...selectedImages, ...files]);
+    };
+
+    useEffect(() => {
+        if (isModalOpen) {
+            // Reset location when modal opens (optional)
+            setLocation(null);
+        }
+    }, [isModalOpen]);
+
     return (
         <div className="flex flex-col items-center relative">
-            <h3 className="text-3xl py-4 text-teal-900 font-medium dark:text-teal-400 font-semibold text-center">
+            <h3 className="text-3xl py-4 text-teal-900 dark:text-teal-400 font-medium font-semibold text-center">
                 My Trips
             </h3>
-            {/* Button to open modal */}
+
             <button
                 onClick={handleModalOpen}
-                className="transform - bg-teal-600 text-white rounded-full p-4 shadow-lg z-20 hover:bg-teal-700 transition-all"
+                className="bg-teal-600 dark:bg-teal-500 text-white rounded-full p-4 shadow-lg z-20 hover:bg-teal-700 dark:hover:bg-teal-600 transition-all"
             >
                 <GiDivingHelmet size={40} />
             </button>
 
-            {/* Vertical Timeline */}
             <div className="flex flex-col items-center w-full">
                 <VerticalTimeline>
                     {trips.map((trip, index) => (
@@ -53,50 +71,71 @@ const Timeline = () => {
                             iconStyle={{ background: 'teal', color: '#fff' }}
                             contentStyle={{
                                 background: 'transparent',
-                                border: '4px solid #ddd',
+                                border: '4px solid #0D9488',
                                 borderRadius: '8px',
                                 boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
                             }}
-                            contentArrowStyle={{ borderRight: '14px solid #fff' }}
+                            contentArrowStyle={{ borderRight: '14px solid #0D9488' }}
                         >
-                            {/* Use the existing TripCard component here */}
                             <TripCard trip={trip} handleEditPost={handleEditPost} />
                         </VerticalTimelineElement>
                     ))}
                 </VerticalTimeline>
             </div>
 
-            {/* Modal for adding/editing post */}
             {isModalOpen && (
                 <div className="modal fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="modal-content bg-white p-6 rounded-lg w-full sm:w-96 shadow-lg transition-all duration-300 transform scale-95 hover:scale-100">
-                        <h3 className="text-xl mb-4 text-teal-600">Add/Edit Trip</h3>
+                    <div className="modal-content bg-white dark:bg-gray-800 p-6 rounded-lg w-full sm:w-96 shadow-lg transition-all duration-300 transform scale-95 hover:scale-100">
+                        <h3 className="text-xl mb-4 text-teal-600 dark:text-teal-400">Add/Edit Trip</h3>
                         <form onSubmit={handleFormSubmit}>
                             <input
                                 type="text"
                                 placeholder="Trip Title"
                                 name="title"
                                 value={formData.title || ""}
-                                onChange={(e) => handleFormSubmit(e)}
-                                className="w-full mb-4 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                onChange={handleInputChange}
+                                className="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             />
                             <textarea
                                 placeholder="Description"
                                 name="description"
                                 value={formData.description || ""}
-                                onChange={(e) => handleFormSubmit(e)}
-                                className="w-full mb-4 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                onChange={handleInputChange}
+                                className="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            />
+                            <input
+                                type="date"
+                                name="date"
+                                value={formData.date || ""}
+                                onChange={handleInputChange}
+                                className="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            />
+                            
+                            {/* Location Search Component */}
+                            <LocationSearch setLocation={setLocation} />
+                            {location && (
+                                <div className="mb-4 text-teal-600 dark:text-teal-400">
+                                    Selected Location: {location}
+                                </div>
+                            )}
+
+                            <input
+                                type="file"
+                                accept="image/*"
+                                multiple
+                                onChange={handleImageChange}
+                                className="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             />
                             <button
                                 type="submit"
-                                className="w-full bg-teal-500 text-white rounded-md px-4 py-2 mb-4 hover:bg-teal-600 transition-all"
+                                className="w-full bg-teal-500 dark:bg-teal-600 text-white rounded-md px-4 py-2 mb-4 hover:bg-teal-600 dark:hover:bg-teal-500 transition-all"
                             >
                                 Save Trip
                             </button>
                         </form>
                         <button
                             onClick={handleModalClose}
-                            className="w-full text-center text-red-600 hover:text-red-700 transition-all"
+                            className="w-full text-center text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-500 transition-all"
                         >
                             Close
                         </button>
@@ -105,7 +144,6 @@ const Timeline = () => {
             )}
         </div>
     );
-
 };
 
 export default Timeline;
