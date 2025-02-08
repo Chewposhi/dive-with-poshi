@@ -28,7 +28,7 @@ export default function Hero() {
         </div>
       </div>
 
-      <h3 className="text-3xl py-4 text-white font-semibold text-center">
+      <h3 className="text-3xl py-4 text-teal-900 font-medium dark:text-teal-400 font-semibold text-center">
         Certifications
       </h3>
 
