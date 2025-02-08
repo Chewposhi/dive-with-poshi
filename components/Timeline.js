@@ -4,7 +4,7 @@ import { GiDivingHelmet } from "react-icons/gi";
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import TripCard from "./TripCard";
-import LocationSearch from "./LocationSearch";  // Location search component
+import LocationSearch from "./LocationSearch"; // Location search component
 
 const trips = [
     {
@@ -36,6 +36,13 @@ const Timeline = () => {
             setLocation(formData.location || null); // Reset location when modal opens
         }
     }, [isModalOpen, formData.location]);
+
+    // Handle image removal
+    const handleRemoveImage = (index) => {
+        const updatedImages = formData.images.filter((_, i) => i !== index);
+        // Update the formData state with the new list of images
+        handleInputChange({ target: { name: 'images', value: updatedImages } });
+    };
 
     return (
         <div className="flex flex-col items-center relative">
@@ -115,6 +122,29 @@ const Timeline = () => {
                                 onChange={handleImageChange}
                                 className="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             />
+
+                            {/* Display image previews */}
+                            {formData.images && formData.images.length > 0 && (
+                                <div className="flex flex-wrap space-x-4 my-4">
+                                    {formData.images.map((image, index) => (
+                                        <div key={index} className="relative">
+                                            <img
+                                                src={URL.createObjectURL(image)}
+                                                alt={`preview-${index}`}
+                                                className="w-24 h-24 object-cover rounded-md"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={() => handleRemoveImage(index)}
+                                                className="absolute top-0 right-0 text-red-600 hover:text-red-800"
+                                            >
+                                                &times;
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
                             <button
                                 type="submit"
                                 className="w-full bg-teal-500 dark:bg-teal-600 text-white rounded-md px-4 py-2 mb-4 hover:bg-teal-600 dark:hover:bg-teal-500 transition-all"

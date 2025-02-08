@@ -1,5 +1,6 @@
 import React, { createContext, useState } from "react";
-import { geocodeByAddress, getLatLng } from "react-places-autocomplete";  // Import geocoding functions
+import { geocodeByAddress, getLatLng } from "react-places-autocomplete"; // Import geocoding functions
+import imageCompression from "browser-image-compression"; // Import the image compression library
 
 // Create a context to handle the form state
 export const FormContext = createContext();
@@ -46,9 +47,33 @@ export const FormProvider = ({ children }) => {
     };
 
     // Handle form submission (saving or editing data)
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
         console.log("Form Data Submitted:", formData); // Log formData on submit
+
+        // Compress images before sending to backend
+        const compressedImages = await Promise.all(
+            formData.images.map(async (file) => {
+                const options = {
+                    maxSizeMB: 0.5, // Maximum size of each image in MB
+                    maxWidthOrHeight: 500, // Maximum width or height for the image
+                };
+                try {
+                    const compressedFile = await imageCompression(file, options);
+                    console.log("Compressed image:", compressedFile); // Log compressed image
+                    return compressedFile;
+                } catch (error) {
+                    console.error("Image compression error:", error);
+                    return file; // If compression fails, fall back to the original file
+                }
+            })
+        );
+
+        // Here you can send the compressedImages to the backend instead of formData.images
+        // Example: 
+        // const formDataToSend = { ...formData, images: compressedImages };
+        // sendToBackend(formDataToSend);
+
         setFormData({
             title: "",
             description: "",
@@ -56,8 +81,8 @@ export const FormProvider = ({ children }) => {
             location: "",
             latitude: "",
             longitude: "",
-            images: [],
-        }); // Reset form after submit
+            images: [], // Reset images after submission
+        });
         setModalOpen(false); // Close modal after submission
     };
 
@@ -72,10 +97,12 @@ export const FormProvider = ({ children }) => {
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
         console.log("Images selected:", files); // Log images selected
+
         if (formData.images.length + files.length > 8) {
             alert("You can only upload up to 8 images.");
             return;
         }
+
         setFormData({
             ...formData,
             images: [...formData.images, ...files],
