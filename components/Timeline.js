@@ -28,25 +28,14 @@ const trips = [
 ];
 
 const Timeline = () => {
-    const { formData, handleInputChange, handleFormSubmit, handleEditPost, isModalOpen, handleModalClose, handleModalOpen } = useContext(FormContext);
-    const [selectedImages, setSelectedImages] = useState([]);
+    const { formData, handleInputChange, handleFormSubmit, handleEditPost, isModalOpen, handleModalClose, handleModalOpen, handleImageChange, handleLocationChange } = useContext(FormContext);
     const [location, setLocation] = useState(null);
-
-    const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
-        if (selectedImages.length + files.length > 8) {
-            alert("You can only upload up to 8 images.");
-            return;
-        }
-        setSelectedImages([...selectedImages, ...files]);
-    };
 
     useEffect(() => {
         if (isModalOpen) {
-            // Reset location when modal opens (optional)
-            setLocation(null);
+            setLocation(formData.location || null); // Reset location when modal opens
         }
-    }, [isModalOpen]);
+    }, [isModalOpen, formData.location]);
 
     return (
         <div className="flex flex-col items-center relative">
@@ -112,7 +101,7 @@ const Timeline = () => {
                             />
                             
                             {/* Location Search Component */}
-                            <LocationSearch setLocation={setLocation} />
+                            <LocationSearch setLocation={(loc) => { handleLocationChange(loc); setLocation(loc); }} />
                             {location && (
                                 <div className="mb-4 text-teal-600 dark:text-teal-400">
                                     Selected Location: {location}

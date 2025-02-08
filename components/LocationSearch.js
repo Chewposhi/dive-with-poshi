@@ -1,37 +1,47 @@
-import React, { useState } from 'react';
-import PlacesAutocomplete from 'react-places-autocomplete';
+import React, { useState } from "react";
+import PlacesAutocomplete from "react-places-autocomplete";
 
 const LocationSearch = ({ setLocation }) => {
-    const [address, setAddress] = useState('');
+    const [address, setAddress] = useState("");
 
-    const handleSelect = async (selectedAddress) => {
-        setAddress(selectedAddress);
-        const geocode = await window.google.maps.Geocoder();
-        geocode.geocode({ address: selectedAddress }, (results, status) => {
-            if (status === 'OK') {
-                const { lat, lng } = results[0].geometry.location;
-                setLocation({ lat: lat(), lng: lng() }); // set lat, lng as location
-            }
-        });
+    const handleSelect = (value) => {
+        setAddress(value);
+        setLocation(value); // Update the parent component's state
     };
 
     return (
-        <PlacesAutocomplete value={address} onChange={setAddress} onSelect={handleSelect}>
-            {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+        <PlacesAutocomplete
+            value={address}
+            onChange={setAddress}
+            onSelect={handleSelect}
+        >
+            {({ getInputProps, suggestions, getSuggestionItemProps }) => (
                 <div>
-                    <input {...getInputProps({ placeholder: 'Search for a location' })} className="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100" />
-                    <div>
-                        {loading && <div>Loading...</div>}
-                        {suggestions.map((suggestion) => {
-                            const style = suggestion.active
-                                ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                                : { backgroundColor: '#ffffff', cursor: 'pointer' };
-                            return (
-                                <div {...getSuggestionItemProps(suggestion, { style })} key={suggestion.placeId}>
-                                    {suggestion.description}
-                                </div>
-                            );
+                    <input
+                        {...getInputProps({
+                            placeholder: "Search for a location...",
+                            className: "location-search-input w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100",
                         })}
+                    />
+                    <div
+                        className="autocomplete-dropdown-container"
+                        style={{
+                            maxHeight: "200px", // Set max height for the dropdown
+                            overflowY: "auto",  // Enable vertical scrolling
+                            backgroundColor: "#fff",  // Optional: background color for the suggestions
+                            borderRadius: "8px", // Optional: rounded corners
+                            boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Optional: drop shadow for better UI
+                        }}
+                    >
+                        {suggestions.map((suggestion, index) => (
+                            <div
+                                key={index}
+                                {...getSuggestionItemProps(suggestion)}
+                                className="suggestion-item text-gray-900 dark:text-gray-100 p-2 cursor-pointer hover:bg-teal-100 dark:hover:bg-teal-700 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                            >
+                                {suggestion.description}
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}
