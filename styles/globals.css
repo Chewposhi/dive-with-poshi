@@ -22,3 +22,33 @@ a {
   font-family: "burtons";
   src: url("../public/Burtons.otf");
 }
+
+
+/* Basic styles for the 3D Badge */
+.badge-3d {
+  width: 150px;
+  height: 150px;
+  background: linear-gradient(45deg, #ff6f61, #d4e157);
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.3s ease-in-out;
+  perspective: 600px;
+}
+
+.badge-3d img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.badge-3d h3 {
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.badge-3d:hover {
+  transform: rotateY(20deg);
+}
