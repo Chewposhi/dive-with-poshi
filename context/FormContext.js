@@ -1,4 +1,5 @@
 import React, { createContext, useState } from "react";
+import { geocodeByAddress, getLatLng } from "react-places-autocomplete";  // Import geocoding functions
 
 // Create a context to handle the form state
 export const FormContext = createContext();
@@ -10,6 +11,8 @@ export const FormProvider = ({ children }) => {
         description: "",
         date: "",
         location: "", // Added location state
+        latitude: "", // Added latitude state
+        longitude: "", // Added longitude state
         images: [], // Added images state
     });
 
@@ -25,6 +28,8 @@ export const FormProvider = ({ children }) => {
             description: "",
             date: "",
             location: "", // Reset location
+            latitude: "", // Reset latitude
+            longitude: "", // Reset longitude
             images: [], // Reset images
         });
         setModalOpen(false);
@@ -49,6 +54,8 @@ export const FormProvider = ({ children }) => {
             description: "",
             date: "",
             location: "",
+            latitude: "",
+            longitude: "",
             images: [],
         }); // Reset form after submit
         setModalOpen(false); // Close modal after submission
@@ -75,13 +82,25 @@ export const FormProvider = ({ children }) => {
         });
     };
 
-    // Handle location change (set location)
-    const handleLocationChange = (location) => {
+    // Handle location change (set location and convert it to coordinates)
+    const handleLocationChange = async (location) => {
         console.log("Location selected:", location); // Log location change
-        setFormData({
-            ...formData,
-            location: location,
-        });
+        try {
+            // Geocode the location to get coordinates
+            const results = await geocodeByAddress(location);
+            const latLng = await getLatLng(results[0]);
+
+            // Update formData with location and coordinates
+            setFormData({
+                ...formData,
+                location: location,
+                latitude: latLng.lat,
+                longitude: latLng.lng,
+            });
+            console.log("Coordinates updated:", latLng); // Log coordinates
+        } catch (error) {
+            console.error("Error getting coordinates for location:", error);
+        }
     };
 
     return (

@@ -28,7 +28,6 @@ const LocationSearch = ({ setLocation }) => {
                         style={{
                             maxHeight: "200px", // Set max height for the dropdown
                             overflowY: "auto",  // Enable vertical scrolling
-                            backgroundColor: "#fff",  // Optional: background color for the suggestions
                             borderRadius: "8px", // Optional: rounded corners
                             boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)", // Optional: drop shadow for better UI
                         }}
@@ -37,7 +36,7 @@ const LocationSearch = ({ setLocation }) => {
                             <div
                                 key={index}
                                 {...getSuggestionItemProps(suggestion)}
-                                className="suggestion-item text-gray-900 dark:text-gray-100 p-2 cursor-pointer hover:bg-teal-100 dark:hover:bg-teal-700 rounded bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                className="suggestion-item text-gray-900 dark:text-gray-100 p-2 cursor-pointer hover:bg-teal-100 dark:hover:bg-teal-700 rounded bg-white dark:bg-gray-700"
                             >
                                 {suggestion.description}
                             </div>
