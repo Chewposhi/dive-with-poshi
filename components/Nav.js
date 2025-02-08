@@ -3,7 +3,7 @@ import React from "react";
 import { BsFillMoonStarsFill } from "react-icons/bs";
 
 const Navbar = ({ darkMode, setDarkMode }) => (
-  <nav className="mb-12 flex justify-between dark:text-white">
+  <nav className="sticky top-5 z-50 flex justify-between items-center w-full dark:text-white pb-4">
     <h1 className="font-burtons text-xl">divewithposhi</h1>
     <ul className="flex items-center">
       <li>
