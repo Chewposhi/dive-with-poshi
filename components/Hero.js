@@ -13,7 +13,7 @@ export default function Hero() {
           Chew Poshi
         </h2>
         <h3 className="text-2xl py-2 dark:text-white md:text-3xl">
-          Developer, Scuba Diver, Free Diver, Spear Fishingman
+          Developer, Scuba Diver, Free Diver, Spear Fisherman
         </h3>
         <div className="text-5xl flex justify-center gap-16 py-3 text-gray-600 dark:text-gray-400">
           <GiScubaTanks />
