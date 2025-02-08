@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FormContext } from "../context/FormContext";
 import { GiDivingHelmet } from "react-icons/gi";
+import { MdAddPhotoAlternate } from "react-icons/md";
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
 import TripCard from "./TripCard";
@@ -62,7 +63,6 @@ const Timeline = () => {
                     {trips.map((trip, index) => (
                         <VerticalTimelineElement
                             key={index}
-                            date={trip.date}
                             icon={<img src={trip.imageUrl} alt={trip.title} className="w-12 h-12 rounded-full" />}
                             iconStyle={{ background: 'teal', color: '#fff' }}
                             contentStyle={{
@@ -106,7 +106,7 @@ const Timeline = () => {
                                 onChange={handleInputChange}
                                 className="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             />
-                            
+
                             {/* Location Search Component */}
                             <LocationSearch setLocation={(loc) => { handleLocationChange(loc); setLocation(loc); }} />
                             {location && (
@@ -117,11 +117,21 @@ const Timeline = () => {
 
                             <input
                                 type="file"
+                                id="file-upload"
                                 accept="image/*"
                                 multiple
                                 onChange={handleImageChange}
-                                className="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                className="hidden" // Hide the default file input
                             />
+                            <label
+                                htmlFor="file-upload"
+                                className="flex justify-center items-center w-full mb-4 p-2 border border-dashed border-gray-300 dark:border-gray-600 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
+                            >
+                                <MdAddPhotoAlternate size={24} className="text-teal-500 dark:text-teal-400" /> {/* Reduced icon size */}
+                                <span className="ml-2 text-sm text-teal-500 dark:text-teal-400">Add Photos</span> {/* Smaller text */}
+                            </label>
+
+
 
                             {/* Display image previews */}
                             {formData.images && formData.images.length > 0 && (
