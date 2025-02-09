@@ -71,7 +71,7 @@ export const TripProvider = ({ children }) => {
     const fetchUpdatedTrips = async () => {
         setIsLoading(true);
         try {
-            const response = await fetchTrips();
+            const response = await getTrips();
             setTrips(response); // Set the updated trips data
         } catch (error) {
             console.error("Error fetching trips:", error);
@@ -103,44 +103,45 @@ export const TripProvider = ({ children }) => {
             })
         );
 
+        // Create FormData to send to backend
+        const formDataToSend = new FormData();
+
+        // Append the trip data as JSON (this will be in a single part called "trip")
+        formDataToSend.append('trip', new Blob([JSON.stringify({
+            title: formData.title,
+            description: formData.description,
+            date: formData.date,
+            location: formData.location,
+            latitude: formData.latitude,
+            longitude: formData.longitude,
+            duration: formData.duration,
+        })], { type: "application/json" }));
+
+        // Append the image as the second part called "image"
+        compressedImages.forEach((image) => {
+            formDataToSend.append('images', image); // Append each compressed image as a separate part named "image"
+        });
+
         // Check if we are editing or creating a new trip
         if (formData.id) {
             // If we have an ID, it means we are editing an existing trip
             try {
-                const response = await updateTrip(
-                    formData.id,
-                    formData.text,
-                    compressedImages,
-                    formData.deletedImageIds,
-                    formData.authorId,
-                    formData.authorName,
-                    formData.date,
-                    [formData.latitude, formData.longitude],
-                    formData.duration // Pass the duration here
-                );
-                console.log("Post updated successfully:", response);
+                const response = await updateTrip(formData.id, formDataToSend);
+                console.log("Trip updated successfully:", response);
                 // Fetch the updated trips list
                 fetchUpdatedTrips();
             } catch (error) {
-                console.error("Error updating post:", error);
+                console.error("Error updating trip:", error);
             }
         } else {
             // Otherwise, we're creating a new trip
             try {
-                const response = await createTrip(
-                    formData.text,
-                    compressedImages,
-                    formData.authorId,
-                    formData.authorName,
-                    formData.date,
-                    [formData.latitude, formData.longitude], // Add coordinates
-                    formData.duration // Pass the duration here
-                );
-                console.log("Post created successfully:", response);
+                const response = await createTrip(formDataToSend);
+                console.log("Trip created successfully:", response);
                 // Fetch the updated trips list
                 fetchUpdatedTrips();
             } catch (error) {
-                console.error("Error creating post:", error);
+                console.error("Error creating trip:", error);
             }
         }
 
@@ -157,6 +158,7 @@ export const TripProvider = ({ children }) => {
         });
         setModalOpen(false); // Close modal after submission
     };
+
 
     // Handle editing an existing trip
     const handleEditPost = (trip) => {

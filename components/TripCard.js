@@ -36,6 +36,11 @@ const TripCard = ({ trip, handleEditPost }) => {
     };
   }, []);
 
+  // Format the date
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString();
+  };
+
   return (
     <div className="trip-card bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6 relative">
       <div className="flex justify-between items-center">
@@ -44,6 +49,12 @@ const TripCard = ({ trip, handleEditPost }) => {
             {trip.title}
           </h4>
           <p className="text-gray-500 dark:text-gray-300">{trip.description}</p>
+          <p className="text-gray-500 dark:text-gray-300 mt-2">
+            <strong>Date: </strong>{formatDate(trip.date)}
+          </p>
+          <p className="text-gray-500 dark:text-gray-300">
+            <strong>Duration: </strong>{trip.duration} hours
+          </p>
         </div>
         {/* Hamburger menu */}
         <div className="absolute top-2 right-2">
@@ -74,11 +85,22 @@ const TripCard = ({ trip, handleEditPost }) => {
           )}
         </div>
       </div>
-      <img
-        src="https://picsum.photos/200/300"
-        alt="Trip"
-        className="w-full h-48 object-cover mt-4 rounded-md"
-      />
+
+      {/* Images */}
+      {trip.images && trip.images.length > 0 ? (
+        <div className="mt-4">
+          {trip.images.map((image, index) => (
+            <img
+              key={index}
+              src={`data:image/jpeg;base64,${image}`}
+              alt={`Trip Image ${index + 1}`}
+              className="w-full h-48 object-cover mt-4 rounded-md"
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-500 dark:text-gray-300 mt-4">No images available</p>
+      )}
     </div>
   );
 };

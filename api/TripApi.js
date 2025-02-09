@@ -23,9 +23,13 @@ export const getTripById = async (id) => {
 };
 
 // Create a new trip
-export const createTrip = async (tripData) => {
+export const createTrip = async (formData) => {
   try {
-    const response = await api.post('/trips', tripData);  // Pass the whole tripData object
+    const response = await api.post('/trips', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',  // Set proper content type for file upload
+      },
+    });
     return response.data; // Return the newly created trip
   } catch (error) {
     console.error('Error creating trip:', error);
@@ -34,9 +38,13 @@ export const createTrip = async (tripData) => {
 };
 
 // Update an existing trip
-export const updateTrip = async (id, tripData) => {
+export const updateTrip = async (id, formData) => {
   try {
-    const response = await api.put(`/trips/${id}`, tripData);  // Pass the whole tripData object
+    const response = await api.put(`/trips/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',  // Set proper content type for file upload
+      },
+    });
     return response.data; // Return the updated trip
   } catch (error) {
     console.error('Error updating trip:', error);

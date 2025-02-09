@@ -65,7 +65,7 @@ const Timeline = () => {
                     <ClipLoader size={50} color="#0D9488" loading={loading} />
                 </div>
             ) : trips.length === 0 ? (
-                <p className="text-teal-600 dark:text-teal-400 text-xl mt-4">No trips available. Add a new trip!</p>
+                <p className="text-teal-900 dark:text-teal-400 text-xl mt-4">No trips available. Add a new trip!</p>
             ) : (
                 <div className="flex flex-col items-center w-full">
                     <VerticalTimeline>
