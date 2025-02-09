@@ -1,11 +1,11 @@
 import '../styles/globals.css'
-import { FormProvider } from '../context/FormContext';
+import { TripProvider } from '../context/TripContext';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <FormProvider>
+    <TripProvider>
       <Component {...pageProps} />
-    </FormProvider>
+    </TripProvider>
   );
 }
 

@@ -1,11 +1,12 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete"; // Import geocoding functions
 import imageCompression from "browser-image-compression"; // Import the image compression library
+import { createTrip, updateTrip, getTrips } from '../api/TripApi'; // Import necessary functions
 
 // Create a context to handle the form state
-export const FormContext = createContext();
+export const TripContext = createContext();
 
-export const FormProvider = ({ children }) => {
+export const TripProvider = ({ children }) => {
     const [isModalOpen, setModalOpen] = useState(false);
     const [formData, setFormData] = useState({
         title: "",
@@ -15,7 +16,26 @@ export const FormProvider = ({ children }) => {
         latitude: "", // Added latitude state
         longitude: "", // Added longitude state
         images: [], // Added images state
+        duration: "", // Added duration state
     });
+    const [trips, setTrips] = useState([]); // State to hold the list of trips
+    const [isLoading, setIsLoading] = useState(false); // State to track loading
+
+    // Fetch trips when the component mounts
+    useEffect(() => {
+        const fetchAllTrips = async () => {
+            setIsLoading(true);
+            try {
+                const response = await getTrips();
+                setTrips(response); // Set trips data after fetching
+            } catch (error) {
+                console.error("Error fetching trips:", error);
+            } finally {
+                setIsLoading(false); // Set loading to false after the request
+            }
+        };
+        fetchAllTrips();
+    }, []); // Empty dependency array means it runs only once on mount
 
     const handleModalOpen = () => {
         setModalOpen(true);
@@ -32,6 +52,7 @@ export const FormProvider = ({ children }) => {
             latitude: "", // Reset latitude
             longitude: "", // Reset longitude
             images: [], // Reset images
+            duration: "", // Reset duration
         });
         setModalOpen(false);
     };
@@ -46,7 +67,20 @@ export const FormProvider = ({ children }) => {
         });
     };
 
-    // Handle form submission (saving or editing data)
+    // Fetch trips again after creating or updating a trip
+    const fetchUpdatedTrips = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetchTrips();
+            setTrips(response); // Set the updated trips data
+        } catch (error) {
+            console.error("Error fetching trips:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Handle form submission (creating or editing trip data)
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         console.log("Form Data Submitted:", formData); // Log formData on submit
@@ -69,11 +103,48 @@ export const FormProvider = ({ children }) => {
             })
         );
 
-        // Here you can send the compressedImages to the backend instead of formData.images
-        // Example: 
-        // const formDataToSend = { ...formData, images: compressedImages };
-        // sendToBackend(formDataToSend);
+        // Check if we are editing or creating a new trip
+        if (formData.id) {
+            // If we have an ID, it means we are editing an existing trip
+            try {
+                const response = await updateTrip(
+                    formData.id,
+                    formData.text,
+                    compressedImages,
+                    formData.deletedImageIds,
+                    formData.authorId,
+                    formData.authorName,
+                    formData.date,
+                    [formData.latitude, formData.longitude],
+                    formData.duration // Pass the duration here
+                );
+                console.log("Post updated successfully:", response);
+                // Fetch the updated trips list
+                fetchUpdatedTrips();
+            } catch (error) {
+                console.error("Error updating post:", error);
+            }
+        } else {
+            // Otherwise, we're creating a new trip
+            try {
+                const response = await createTrip(
+                    formData.text,
+                    compressedImages,
+                    formData.authorId,
+                    formData.authorName,
+                    formData.date,
+                    [formData.latitude, formData.longitude], // Add coordinates
+                    formData.duration // Pass the duration here
+                );
+                console.log("Post created successfully:", response);
+                // Fetch the updated trips list
+                fetchUpdatedTrips();
+            } catch (error) {
+                console.error("Error creating post:", error);
+            }
+        }
 
+        // Reset form data after submission
         setFormData({
             title: "",
             description: "",
@@ -82,6 +153,7 @@ export const FormProvider = ({ children }) => {
             latitude: "",
             longitude: "",
             images: [], // Reset images after submission
+            duration: "", // Reset duration after submission
         });
         setModalOpen(false); // Close modal after submission
     };
@@ -131,7 +203,7 @@ export const FormProvider = ({ children }) => {
     };
 
     return (
-        <FormContext.Provider
+        <TripContext.Provider
             value={{
                 formData,
                 handleInputChange,
@@ -143,9 +215,11 @@ export const FormProvider = ({ children }) => {
                 handleModalClose,
                 handleImageChange,
                 handleLocationChange,
+                trips,
+                isLoading,
             }}
         >
             {children}
-        </FormContext.Provider>
+        </TripContext.Provider>
     );
 };

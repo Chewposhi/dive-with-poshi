@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useFormContext } from '../context/FormContext';
+import { TripContext } from '../context/TripContext';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
 const defaultLocation = [31.24505425549617, 121.42562708203337]; // Fallback location (Shanghai)
 
 const TripForm = () => {
-  const { isModalOpen, closeModal, tripData, setTripData } = useFormContext();
+  const { isModalOpen, closeModal, tripData, setTripData } = TripContext();
   const [title, setTitle] = useState('');
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
