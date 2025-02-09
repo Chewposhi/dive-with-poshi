@@ -67,21 +67,19 @@ const TripCard = ({ trip, handleEditPost }) => {
           </h4>
           <p className="text-gray-500 dark:text-gray-300">{trip.description}</p>
           <div className="mt-2 flex flex-col items-start space-y-2">
-  <div className="flex items-center space-x-2"> {/* Ensure proper space between icon and text */}
-    <FaCalendarAlt className="text-teal-500 text-lg" /> {/* Icon size */}
-    <h4 className="text-gray-500 dark:text-gray-300 m-0 p-0 leading-none">{formatDate(trip.date)}</h4> {/* Remove margins and padding */}
-  </div>
-  <div className="flex items-center space-x-2"> {/* Ensure proper space between icon and text */}
-    <FaMapMarkerAlt className="text-teal-500 text-lg" /> {/* Icon size */}
-    <h4 className="text-gray-500 dark:text-gray-300 m-0 p-0 leading-none">{trip.location}</h4> {/* Remove margins and padding */}
-  </div>
-  <div className="flex items-center space-x-2"> {/* Ensure proper space between icon and text */}
-    <FaHourglass className="text-teal-500 text-lg" /> {/* Icon size */}
-    <h4 className="text-gray-500 dark:text-gray-300 m-0 p-0 leading-none">{trip.duration} hours</h4> {/* Remove margins and padding */}
-  </div>
-</div>
-
-
+            <div className="flex items-center space-x-2"> {/* Ensure proper space between icon and text */}
+              <FaCalendarAlt className="text-teal-500 text-lg" /> {/* Icon size */}
+              <h4 className="text-gray-500 dark:text-gray-300 m-0 p-0 leading-none">{formatDate(trip.date)}</h4> {/* Remove margins and padding */}
+            </div>
+            <div className="flex items-center space-x-2"> {/* Ensure proper space between icon and text */}
+              <FaMapMarkerAlt className="text-teal-500 text-lg" /> {/* Icon size */}
+              <h4 className="text-gray-500 dark:text-gray-300 m-0 p-0 leading-none">{trip.location}</h4> {/* Remove margins and padding */}
+            </div>
+            <div className="flex items-center space-x-2"> {/* Ensure proper space between icon and text */}
+              <FaHourglass className="text-teal-500 text-lg" /> {/* Icon size */}
+              <h4 className="text-gray-500 dark:text-gray-300 m-0 p-0 leading-none">{trip.duration} hours</h4> {/* Remove margins and padding */}
+            </div>
+          </div>
         </div>
         {/* Hamburger menu */}
         <div className="absolute top-2 right-2">

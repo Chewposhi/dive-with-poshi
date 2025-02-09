@@ -161,9 +161,9 @@ const Timeline = () => {
                                     {formData.images.map((image, index) => (
                                         <div key={index} className="relative">
                                             <img
-                                                src={URL.createObjectURL(image)}
+                                                src={image instanceof File ? URL.createObjectURL(image) : `data:image/jpeg;base64,${image}`}
                                                 alt={`preview-${index}`}
-                                                className="w-24 h-24 object-cover rounded-md"
+                                                className="w-24 h-24 object-contain rounded-md"
                                             />
                                             <button
                                                 type="button"
