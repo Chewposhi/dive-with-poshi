@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { GiHamburgerMenu } from "react-icons/gi"; // Hamburger menu icon
+import Slider from "react-slick"; // Import react-slick
+
+// Import slick-carousel styles for the slider
+import "slick-carousel/slick/slick.css"; 
+import "slick-carousel/slick/slick-theme.css"; 
 
 const TripCard = ({ trip, handleEditPost }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -39,6 +44,17 @@ const TripCard = ({ trip, handleEditPost }) => {
   // Format the date
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString();
+  };
+
+  // Slick slider settings
+  const sliderSettings = {
+    dots: true, // Enable dots for navigation
+    infinite: false, // Loop the images
+    speed: 500, // Transition speed in ms
+    autoplay: true, // Enable auto scroll
+    autoplaySpeed: 3000, // Set auto scroll interval (3 seconds)
+    slidesToShow: 1, // Show one image at a time
+    slidesToScroll: 1, // Scroll one image at a time
   };
 
   return (
@@ -89,14 +105,17 @@ const TripCard = ({ trip, handleEditPost }) => {
       {/* Images */}
       {trip.images && trip.images.length > 0 ? (
         <div className="mt-4">
-          {trip.images.map((image, index) => (
-            <img
-              key={index}
-              src={`data:image/jpeg;base64,${image}`}
-              alt={`Trip Image ${index + 1}`}
-              className="w-full h-48 object-cover mt-4 rounded-md"
-            />
-          ))}
+          <Slider {...sliderSettings}>
+            {trip.images.map((image, index) => (
+              <div key={index} className="w-full">
+                <img
+                  src={`data:image/jpeg;base64,${image}`}
+                  alt={`Trip Image ${index + 1}`}
+                  className="w-full h-48 object-contain mt-4 rounded-md" // Changed to object-contain to prevent cropping
+                />
+              </div>
+            ))}
+          </Slider>
         </div>
       ) : (
         <p className="text-gray-500 dark:text-gray-300 mt-4">No images available</p>
