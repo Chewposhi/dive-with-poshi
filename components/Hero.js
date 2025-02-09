@@ -1,7 +1,6 @@
 import React from "react";
 import { GiScubaMask, GiScubaTanks, GiSpearfishing } from "react-icons/gi";
 import Image from "next/image";
-import profile from "../public/profie.jpg";
 import Badge3D from "./Badge";
 import { diveCerts } from "../constants/constants";
 
@@ -27,7 +26,7 @@ export default function Hero() {
         {/* Responsive Profile Image */}
         <div className="mx-auto bg-gradient-to-b from-teal-500 rounded-full relative overflow-hidden mt-10 w-40 h-40 md:w-72 md:h-72 lg:w-96 lg:h-96">
           <Image 
-            src={profile} 
+            src={"/profile.jpg"} 
             layout="fill" 
             objectFit="cover" 
             alt="Profile Image" 
