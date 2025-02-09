@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { GiHamburgerMenu } from "react-icons/gi"; // Hamburger menu icon
+import { FaCalendarAlt, FaMapMarkerAlt, FaHourglass } from "react-icons/fa"; // Date, Location, and Duration icons
 import Slider from "react-slick"; // Import react-slick
 
 // Import slick-carousel styles for the slider
-import "slick-carousel/slick/slick.css"; 
-import "slick-carousel/slick/slick-theme.css"; 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const TripCard = ({ trip, handleEditPost }) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -65,12 +66,22 @@ const TripCard = ({ trip, handleEditPost }) => {
             {trip.title}
           </h4>
           <p className="text-gray-500 dark:text-gray-300">{trip.description}</p>
-          <p className="text-gray-500 dark:text-gray-300 mt-2">
-            <strong>Date: </strong>{formatDate(trip.date)}
-          </p>
-          <p className="text-gray-500 dark:text-gray-300">
-            <strong>Duration: </strong>{trip.duration} hours
-          </p>
+          <div className="mt-2 flex flex-col items-start space-y-2">
+  <div className="flex items-center space-x-2"> {/* Ensure proper space between icon and text */}
+    <FaCalendarAlt className="text-teal-500 text-lg" /> {/* Icon size */}
+    <h4 className="text-gray-500 dark:text-gray-300 m-0 p-0 leading-none">{formatDate(trip.date)}</h4> {/* Remove margins and padding */}
+  </div>
+  <div className="flex items-center space-x-2"> {/* Ensure proper space between icon and text */}
+    <FaMapMarkerAlt className="text-teal-500 text-lg" /> {/* Icon size */}
+    <h4 className="text-gray-500 dark:text-gray-300 m-0 p-0 leading-none">{trip.location}</h4> {/* Remove margins and padding */}
+  </div>
+  <div className="flex items-center space-x-2"> {/* Ensure proper space between icon and text */}
+    <FaHourglass className="text-teal-500 text-lg" /> {/* Icon size */}
+    <h4 className="text-gray-500 dark:text-gray-300 m-0 p-0 leading-none">{trip.duration} hours</h4> {/* Remove margins and padding */}
+  </div>
+</div>
+
+
         </div>
         {/* Hamburger menu */}
         <div className="absolute top-2 right-2">
