@@ -50,10 +50,6 @@ const Timeline = () => {
 
     return (
         <div className="flex flex-col items-center relative">
-            <h3 className="text-3xl py-4 text-teal-900 dark:text-teal-400 font-medium font-semibold text-center">
-                My Trips
-            </h3>
-
             <button
                 onClick={handleModalOpen}
                 className="bg-teal-600 dark:bg-teal-500 text-white rounded-full p-4 shadow-lg z-20 hover:bg-teal-700 dark:hover:bg-teal-600 transition-all"

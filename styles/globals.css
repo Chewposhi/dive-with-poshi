@@ -52,3 +52,127 @@ a {
 .badge-3d:hover {
   transform: rotateY(20deg);
 }
+
+/* Ensure Leaflet popups are responsive */
+.leaflet-popup-content {
+  width: 100% !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure Leaflet popups are responsive */
+.leaflet-popup-content {
+  width: 100% !important;
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom class to control popup max width based on screen size */
+.custom-popup .popup-content {
+  width: 100%;
+  max-width: 400px; /* Default max width for larger screens */
+}
+
+@media (max-width: 768px) {
+  .custom-popup .popup-content {
+    max-width: 300px; /* Reduce max width on tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .custom-popup .popup-content {
+    max-width: 200px; /* Reduce max width on mobile */
+  }
+}
+
+/* Ensure images inside the popup are responsive */
+.custom-popup img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Modal styling */
+.fixed {
+  position: fixed;
+  inset: 0;
+  z-index: 1000; /* Higher z-index for the modal */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.75); /* Dark overlay */
+}
+
+.bg-white {
+  background-color: #fff;
+}
+
+.bg-gray-800 {
+  background-color: #2d2d2d;
+}
+
+.rounded-lg {
+  border-radius: 10px;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.max-w-3xl {
+  max-width: 1200px;
+}
+
+.p-6 {
+  padding: 1.5rem;
+}
+
+.shadow-lg {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.object-contain {
+  object-fit: contain;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.text-teal-600 {
+  color: #2b7a68;
+}
+
+.text-teal-500 {
+  color: #38b2ac;
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.hover\:bg-teal-700:hover {
+  background-color: #285e61;
+}
+
+.transition-all {
+  transition: all 0.3s ease;
+}
+
+/* Optional Close Button Styling */
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
