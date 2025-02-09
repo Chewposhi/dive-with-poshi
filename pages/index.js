@@ -36,7 +36,7 @@ export default function Home() {
       <Head>
         <title>Dive with Poshi</title>
         <meta name="description" content="Follow Poshi on his dive trips" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon-16x16.png" />
         {/* Add the Google Maps script here */}
         <script
           src={`https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&libraries=places`}
