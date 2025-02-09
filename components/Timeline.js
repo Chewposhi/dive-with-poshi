@@ -70,20 +70,41 @@ const Timeline = () => {
                         {trips.map((trip, index) => (
                             <VerticalTimelineElement
                                 key={index}
-                                icon={<img src={trip.imageUrl} alt={trip.title} className="w-12 h-12 rounded-full" />}
-                                iconStyle={{ background: 'teal', color: '#fff' }}
+                                icon={
+                                    <div className="flex justify-center items-center w-full h-full">
+                                        <img
+                                            src={"/profile.jpg"}  // Replace with your dynamic image URL
+                                            alt={trip.title}
+                                            className="w-full h-full object-cover rounded-full border-2 border-teal-500"
+                                        />
+                                    </div>
+                                }
+                                iconStyle={{
+                                    background: 'transparent', // Remove default background to use custom image
+                                    color: '#fff',
+                                }}
                                 contentStyle={{
                                     background: 'transparent',
-                                    border: '4px solid #0D9488',
+                                    border: '4px solid rgb(38, 116, 56)',
                                     borderRadius: '8px',
                                     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
                                 }}
                                 contentArrowStyle={{ borderRight: '14px solid #0D9488' }}
                             >
-                                <TripCard trip={trip} handleEditPost={handleEditPost} handleDeletePost={() => handleDeleteTrip(trip.id)} isSubmitting={isSubmitting}/>
+                                <TripCard
+                                    trip={trip}
+                                    handleEditPost={handleEditPost}
+                                    handleDeletePost={() => handleDeleteTrip(trip.id)}
+                                    isSubmitting={isSubmitting}
+                                />
                             </VerticalTimelineElement>
                         ))}
                     </VerticalTimeline>
+
+
+
+
+
                 </div>
             )}
 
