@@ -53,6 +53,9 @@ a {
   transform: rotateY(20deg);
 }
 
+
+/* map */
+
 /* Ensure Leaflet popups are responsive */
 .leaflet-popup-content {
   width: 100% !important;
