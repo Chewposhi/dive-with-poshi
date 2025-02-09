@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect } from "react";
 import { geocodeByAddress, getLatLng } from "react-places-autocomplete"; // Import geocoding functions
 import imageCompression from "browser-image-compression"; // Import the image compression library
-import { createTrip, updateTrip, getTrips } from '../api/TripApi'; // Import necessary functions
+import { createTrip, updateTrip, getTrips, deleteTrip } from '../api/TripApi'; // Import necessary functions
 
 // Create a context to handle the form state
 export const TripContext = createContext();
@@ -225,6 +225,23 @@ export const TripProvider = ({ children }) => {
         }
     };
 
+    const handleDeleteTrip = async (id) => {
+        try {
+            setIsSubmitting(true);
+            // Call the API to delete the trip
+            await deleteTrip(id); // Assuming deleteTripApi is your API function for deleting trips
+            
+            console.log(`Trip with ID ${id} deleted successfully`);
+    
+            // Fetch the updated trips list
+            fetchUpdatedTrips(); // This will re-fetch and re-sort the trips
+        } catch (error) {
+            console.error("Error deleting trip:", error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
     return (
         <TripContext.Provider
             value={{
@@ -240,7 +257,8 @@ export const TripProvider = ({ children }) => {
                 handleLocationChange,
                 trips,
                 isLoading,
-                isSubmitting
+                isSubmitting,
+                handleDeleteTrip
             }}
         >
             {children}

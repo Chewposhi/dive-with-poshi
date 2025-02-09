@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { GiHamburgerMenu } from "react-icons/gi"; // Hamburger menu icon
-import { FaCalendarAlt, FaMapMarkerAlt, FaHourglass } from "react-icons/fa"; // Date, Location, and Duration icons
-import Slider from "react-slick"; // Import react-slick
-
-// Import slick-carousel styles for the slider
+import { GiHamburgerMenu } from "react-icons/gi";
+import { FaCalendarAlt, FaMapMarkerAlt, FaHourglass } from "react-icons/fa";
+import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-const TripCard = ({ trip, handleEditPost }) => {
+const TripCard = ({ trip, handleEditPost, handleDeletePost, isSubmitting }) => {
   const [showMenu, setShowMenu] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to track modal visibility
-  const [selectedImage, setSelectedImage] = useState(null); // State to store selected image
-  const menuRef = useRef(null); // Reference for the menu to detect outside clicks
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false); // Track if delete is in progress
+  const menuRef = useRef(null);
 
   const toggleMenu = () => {
     setShowMenu(!showMenu);
@@ -22,21 +21,26 @@ const TripCard = ({ trip, handleEditPost }) => {
   };
 
   const handleDelete = () => {
-    // Logic to delete the trip
-    console.log("Deleting trip:", trip);
+    if (isDeleting) return; // Prevent multiple deletions
+
+    // Optionally, show a confirmation before deleting
+    if (window.confirm("Are you sure you want to delete this trip?")) {
+      setIsDeleting(true); // Set deleting state
+      console.log("Deleting trip:", trip);
+      handleDeletePost(trip.id);
+    }
   };
 
   const handleImageClick = (image) => {
-    setSelectedImage(image); // Set the selected image for the modal
-    setIsModalOpen(true); // Open the modal
+    setSelectedImage(image);
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
-    setSelectedImage(null); // Reset selected image
+    setIsModalOpen(false);
+    setSelectedImage(null);
   };
 
-  // Close the menu if clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -50,12 +54,10 @@ const TripCard = ({ trip, handleEditPost }) => {
     };
   }, []);
 
-  // Format the date
   const formatDate = (date) => {
     return new Date(date).toLocaleDateString();
   };
 
-  // Slick slider settings
   const sliderSettings = {
     dots: true,
     infinite: false,
@@ -70,9 +72,7 @@ const TripCard = ({ trip, handleEditPost }) => {
     <div className="trip-card bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6 relative">
       <div className="flex justify-between items-center">
         <div>
-          <h4 className="text-xl font-semibold text-teal-900 dark:text-teal-400">
-            {trip.title}
-          </h4>
+          <h4 className="text-xl font-semibold text-teal-900 dark:text-teal-400">{trip.title}</h4>
           <p className="text-gray-500 dark:text-gray-300">{trip.description}</p>
           <div className="mt-2 flex flex-col items-start space-y-2">
             <div className="flex items-center space-x-2">
@@ -98,6 +98,7 @@ const TripCard = ({ trip, handleEditPost }) => {
         <div className="absolute top-2 right-2">
           <GiHamburgerMenu
             onClick={toggleMenu}
+            aria-label="Toggle menu"
             className="cursor-pointer text-2xl text-teal-900 dark:text-teal-400"
           />
           {showMenu && (
@@ -115,8 +116,16 @@ const TripCard = ({ trip, handleEditPost }) => {
                 <li
                   onClick={handleDelete}
                   className="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-red-500 dark:text-red-400"
+                  disabled={isDeleting} // Disable button during delete
                 >
-                  Delete
+                  {isDeleting ? (
+                    <div className="flex justify-center items-center">
+                      {/* Spinner */}
+                      <div className="w-5 h-5 border-4 border-teal-500 border-t-transparent border-solid rounded-full animate-spin" />
+                    </div>
+                  ) : (
+                    "Delete"
+                  )}
                 </li>
               </ul>
             </div>
@@ -133,7 +142,7 @@ const TripCard = ({ trip, handleEditPost }) => {
                   src={`data:image/jpeg;base64,${image}`}
                   alt={`Trip Image ${index + 1}`}
                   className="w-full h-48 object-contain mt-4 rounded-md cursor-pointer"
-                  onClick={() => handleImageClick(image)} // Add click event to open modal
+                  onClick={() => handleImageClick(image)}
                 />
               </div>
             ))}
@@ -151,7 +160,7 @@ const TripCard = ({ trip, handleEditPost }) => {
         >
           <div
             className="bg-white dark:bg-gray-800 p-6 rounded-lg max-w-3xl w-full shadow-lg"
-            onClick={(e) => e.stopPropagation()} // Prevent closing the modal when clicking inside
+            onClick={(e) => e.stopPropagation()}
           >
             <img
               src={`data:image/jpeg;base64,${selectedImage}`}

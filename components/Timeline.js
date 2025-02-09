@@ -22,6 +22,7 @@ const Timeline = () => {
         trips, // Access trips from context
         isLoading, // Access loading state from context
         isSubmitting, // Access submitting state
+        handleDeleteTrip,
     } = useContext(TripContext);
 
     const [location, setLocation] = useState(null);
@@ -83,7 +84,7 @@ const Timeline = () => {
                                 }}
                                 contentArrowStyle={{ borderRight: '14px solid #0D9488' }}
                             >
-                                <TripCard trip={trip} handleEditPost={handleEditPost} />
+                                <TripCard trip={trip} handleEditPost={handleEditPost} handleDeletePost={() => handleDeleteTrip(trip.id)} isSubmitting={isSubmitting}/>
                             </VerticalTimelineElement>
                         ))}
                     </VerticalTimeline>
