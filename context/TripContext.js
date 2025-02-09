@@ -28,7 +28,16 @@ export const TripProvider = ({ children }) => {
             setIsLoading(true);
             try {
                 const response = await getTrips();
-                setTrips(response); // Set trips data after fetching
+
+                // Sort trips by date (latest first)
+                const sortedTrips = response.sort((a, b) => {
+                    // Convert the date string to Date objects and compare
+                    const dateA = new Date(a.date);
+                    const dateB = new Date(b.date);
+                    return dateB - dateA; // Latest date first
+                });
+
+                setTrips(sortedTrips); // Set sorted trips data
             } catch (error) {
                 console.error("Error fetching trips:", error);
             } finally {
@@ -37,6 +46,7 @@ export const TripProvider = ({ children }) => {
         };
         fetchAllTrips();
     }, []); // Empty dependency array means it runs only once on mount
+
 
     const handleModalOpen = () => {
         setModalOpen(true);
@@ -73,13 +83,22 @@ export const TripProvider = ({ children }) => {
         setIsLoading(true);
         try {
             const response = await getTrips();
-            setTrips(response); // Set the updated trips data
+
+            // Sort trips by date (latest first)
+            const sortedTrips = response.sort((a, b) => {
+                const dateA = new Date(a.date);
+                const dateB = new Date(b.date);
+                return dateB - dateA; // Latest date first
+            });
+
+            setTrips(sortedTrips); // Set sorted trips data
         } catch (error) {
             console.error("Error fetching trips:", error);
         } finally {
-            setIsLoading(false);
+            setIsLoading(false); // Set loading to false after the request
         }
     };
+
 
     // Handle form submission (creating or editing trip data)
     const handleFormSubmit = async (e) => {
