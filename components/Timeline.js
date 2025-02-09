@@ -20,7 +20,8 @@ const Timeline = () => {
         handleImageChange,
         handleLocationChange,
         trips, // Access trips from context
-        loading // Access loading state from context
+        isLoading, // Access loading state from context
+        isSubmitting, // Access submitting state
     } = useContext(TripContext);
 
     const [location, setLocation] = useState(null);
@@ -60,9 +61,9 @@ const Timeline = () => {
             </button>
 
             {/* Show a loading spinner while trips are being fetched */}
-            {loading ? (
+            {isLoading ? (
                 <div className="flex justify-center items-center my-4">
-                    <ClipLoader size={50} color="#0D9488" loading={loading} />
+                    <ClipLoader size={50} color="#0D9488" loading={isLoading} />
                 </div>
             ) : trips.length === 0 ? (
                 <p className="text-teal-900 dark:text-teal-400 text-xl mt-4">No trips available. Add a new trip!</p>
@@ -91,10 +92,11 @@ const Timeline = () => {
 
             {isModalOpen && (
                 <div className="modal fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-                    <div className="modal-content bg-white dark:bg-gray-800 p-6 rounded-lg w-full sm:w-96 shadow-lg transition-all duration-300 transform scale-95 hover:scale-100">
+                    <div className="modal-content bg-white dark:bg-gray-800 p-6 rounded-lg w-full sm:w-96 shadow-lg transition-all duration-300 transform scale-95 hover:scale-100 overflow-y-auto max-h-[90vh]">
                         <h3 className="text-xl mb-4 text-teal-600 dark:text-teal-400">Add/Edit Trip</h3>
                         <form onSubmit={handleSubmit}>
-                            {/* Form fields and inputs */}
+                            {/* Trip Title */}
+                            <label className="block text-teal-600 dark:text-teal-400 mb-2">Trip Title</label>
                             <input
                                 type="text"
                                 placeholder="Trip Title"
@@ -103,6 +105,9 @@ const Timeline = () => {
                                 onChange={handleInputChange}
                                 className="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             />
+
+                            {/* Description */}
+                            <label className="block text-teal-600 dark:text-teal-400 mb-2">Description</label>
                             <textarea
                                 placeholder="Description"
                                 name="description"
@@ -110,6 +115,9 @@ const Timeline = () => {
                                 onChange={handleInputChange}
                                 className="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             />
+
+                            {/* Date */}
+                            <label className="block text-teal-600 dark:text-teal-400 mb-2">Date</label>
                             <input
                                 type="date"
                                 name="date"
@@ -117,21 +125,25 @@ const Timeline = () => {
                                 onChange={handleInputChange}
                                 className="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                             />
+
+                            {/* Duration */}
+                            <label className="block text-teal-600 dark:text-teal-400 mb-2">Duration (in hours)</label>
                             <input
                                 type="number"
                                 name="duration"
                                 value={formData.duration || ""}
                                 onChange={(e) => {
-                                    // Ensure the value is a valid decimal with 1 decimal place
                                     const value = e.target.value;
                                     const formattedValue = value ? parseFloat(value).toFixed(1) : "";
                                     handleInputChange({ target: { name: "duration", value: formattedValue } });
                                 }}
                                 className="w-full mb-4 p-3 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                 placeholder="Duration (in hours)"
-                                step="0.1" // Allows decimal input with 1 decimal place
+                                step="0.1"
                             />
+
                             {/* Location Search Component */}
+                            <label className="block text-teal-600 dark:text-teal-400 mb-2">Location</label>
                             <LocationSearch setLocation={(loc) => { handleLocationChange(loc); setLocation(loc); }} />
                             {location && (
                                 <div className="mb-4 text-teal-600 dark:text-teal-400">
@@ -139,20 +151,22 @@ const Timeline = () => {
                                 </div>
                             )}
 
+                            {/* File Upload */}
+                            <label className="block text-teal-600 dark:text-teal-400 mb-2">Add Photos</label>
                             <input
                                 type="file"
                                 id="file-upload"
                                 accept="image/*"
                                 multiple
                                 onChange={handleImageChange}
-                                className="hidden" // Hide the default file input
+                                className="hidden"
                             />
                             <label
                                 htmlFor="file-upload"
                                 className="flex justify-center items-center w-full mb-4 p-2 border border-dashed border-gray-300 dark:border-gray-600 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500 dark:focus:ring-teal-400 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600 transition-all"
                             >
-                                <MdAddPhotoAlternate size={24} className="text-teal-500 dark:text-teal-400" /> {/* Reduced icon size */}
-                                <span className="ml-2 text-sm text-teal-500 dark:text-teal-400">Add Photos</span> {/* Smaller text */}
+                                <MdAddPhotoAlternate size={24} className="text-teal-500 dark:text-teal-400" />
+                                <span className="ml-2 text-sm text-teal-500 dark:text-teal-400">Add Photos</span>
                             </label>
 
                             {/* Display image previews */}
@@ -177,12 +191,19 @@ const Timeline = () => {
                                 </div>
                             )}
 
-                            <button
-                                type="submit"
-                                className="w-full bg-teal-500 dark:bg-teal-600 text-white rounded-md px-4 py-2 mb-4 hover:bg-teal-600 dark:hover:bg-teal-500 transition-all"
-                            >
-                                Save Trip
-                            </button>
+                            {/* Show the spinner if submitting */}
+                            {isSubmitting ? (
+                                <div className="flex justify-center items-center my-4">
+                                    <ClipLoader size={50} color="#0D9488" loading={isSubmitting} />
+                                </div>
+                            ) : (
+                                <button
+                                    type="submit"
+                                    className="w-full bg-teal-500 dark:bg-teal-600 text-white rounded-md px-4 py-2 mb-4 hover:bg-teal-600 dark:hover:bg-teal-500 transition-all"
+                                >
+                                    Save Trip
+                                </button>
+                            )}
                         </form>
                         <button
                             onClick={handleModalClose}

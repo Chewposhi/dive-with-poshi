@@ -23,8 +23,15 @@ export default function Hero() {
         <p className="text-md py-5 leading-8 text-gray-800 dark:text-gray-200 max-w-xl mx-auto md:text-xl">
           Into all kinds of water sports, especially diving. Join me down below on my diving trips!
         </p>
-        <div className="mx-auto bg-gradient-to-b from-teal-500 rounded-full w-80 h-80 relative overflow-hidden mt-10 md:h-96 md:w-96">
-          <Image src={profile} layout="fill" objectFit="cover" />
+        
+        {/* Responsive Profile Image */}
+        <div className="mx-auto bg-gradient-to-b from-teal-500 rounded-full relative overflow-hidden mt-10 w-40 h-40 md:w-72 md:h-72 lg:w-96 lg:h-96">
+          <Image 
+            src={profile} 
+            layout="fill" 
+            objectFit="cover" 
+            alt="Profile Image" 
+          />
         </div>
       </div>
 

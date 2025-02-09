@@ -20,6 +20,7 @@ export const TripProvider = ({ children }) => {
     });
     const [trips, setTrips] = useState([]); // State to hold the list of trips
     const [isLoading, setIsLoading] = useState(false); // State to track loading
+    const [isSubmitting, setIsSubmitting] = useState(false); // State to track loading
 
     // Fetch trips when the component mounts
     useEffect(() => {
@@ -84,7 +85,7 @@ export const TripProvider = ({ children }) => {
     const handleFormSubmit = async (e) => {
         e.preventDefault();
         console.log("Form Data Submitted:", formData); // Log formData on submit
-
+        setIsSubmitting(true);
         // Compress images before sending to backend
         const compressedImages = await Promise.all(
             formData.images.map(async (file) => {
@@ -157,6 +158,7 @@ export const TripProvider = ({ children }) => {
             duration: "", // Reset duration after submission
         });
         setModalOpen(false); // Close modal after submission
+        setIsSubmitting(false);
     };
 
 
@@ -219,6 +221,7 @@ export const TripProvider = ({ children }) => {
                 handleLocationChange,
                 trips,
                 isLoading,
+                isSubmitting
             }}
         >
             {children}
