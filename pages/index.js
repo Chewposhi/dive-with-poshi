@@ -1,12 +1,35 @@
-// pages/index.js
 import Head from "next/head";
 import { useState } from "react";
 import Hero from "../components/Hero";
 import Navbar from "../components/Nav";
 import Timeline from "../components/Timeline";
+import dynamic from "next/dynamic"; // Add this import
+
+// Dynamically import the MapComponent with ssr: false
+const MapComponent = dynamic(() => import("../components/TripMap"), { 
+  ssr: false 
+});
 
 export default function Home() {
   const [darkMode, setDarkMode] = useState(false);
+
+  const trips = [
+    {
+      id: 1,
+      title: 'Trip to Paris',
+      description: 'A wonderful trip to the city of lights!',
+      latitude: 48.8566,
+      longitude: 2.3522,
+    },
+    {
+      id: 2,
+      title: 'Trip to Tokyo',
+      description: 'Experience the culture and technology of Japan!',
+      latitude: 35.6762,
+      longitude: 139.6503,
+    },
+    // more trips...
+  ];
 
   return (
     <div className={darkMode ? "dark" : ""}>
@@ -25,6 +48,8 @@ export default function Home() {
         <Navbar darkMode={darkMode} setDarkMode={setDarkMode} />
         <Hero darkMode={darkMode} setDarkMode={setDarkMode} />
         <Timeline />
+        {/* Now the MapComponent is dynamically loaded */}
+        <MapComponent trips={trips} />
       </main>
     </div>
   );
