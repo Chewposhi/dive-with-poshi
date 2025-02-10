@@ -105,7 +105,9 @@ export const TripProvider = ({ children }) => {
         e.preventDefault();
         console.log("Form Data Submitted:", formData); // Log formData on submit
         setIsSubmitting(true);
-        // Compress images before sending to backend
+
+        // Log image compression process
+        console.log("Compressing images...");
         const compressedImages = await Promise.all(
             formData.images.map(async (file) => {
                 const options = {
@@ -123,10 +125,20 @@ export const TripProvider = ({ children }) => {
             })
         );
 
+        console.log("Creating FormData to send to backend...");
         // Create FormData to send to backend
         const formDataToSend = new FormData();
 
-        // Append the trip data as JSON (this will be in a single part called "trip")
+        // Log trip data
+        console.log("Appending trip data to FormData", {
+            title: formData.title,
+            description: formData.description,
+            date: formData.date,
+            location: formData.location,
+            latitude: formData.latitude,
+            longitude: formData.longitude,
+            duration: formData.duration,
+        });
         formDataToSend.append('trip', new Blob([JSON.stringify({
             title: formData.title,
             description: formData.description,
@@ -137,29 +149,35 @@ export const TripProvider = ({ children }) => {
             duration: formData.duration,
         })], { type: "application/json" }));
 
-        // Append the image as the second part called "image"
+        // Log images and append them to FormData
+        console.log("Appending images to FormData");
         compressedImages.forEach((image) => {
-            formDataToSend.append('images', image); // Append each compressed image as a separate part named "image"
+            formDataToSend.append('images', image);
+            console.log("Appended image:", image);
         });
+
+        // Log deleted image indexes (if any)
+        if (formData.deletedImageIndexes && formData.deletedImageIndexes.length > 0) {
+            console.log("Appending deleted image indexes:", formData.deletedImageIndexes);
+            formDataToSend.append('deletedImageIndexes', JSON.stringify(formData.deletedImageIndexes)); // Send deleted image indices
+        }
 
         // Check if we are editing or creating a new trip
         if (formData.id) {
-            // If we have an ID, it means we are editing an existing trip
+            console.log(`Updating existing trip with ID: ${formData.id}`);
             try {
                 const response = await updateTrip(formData.id, formDataToSend);
                 console.log("Trip updated successfully:", response);
-                // Fetch the updated trips list
-                fetchUpdatedTrips();
+                fetchUpdatedTrips(); // Fetch the updated trips list
             } catch (error) {
                 console.error("Error updating trip:", error);
             }
         } else {
-            // Otherwise, we're creating a new trip
+            console.log("Creating a new trip...");
             try {
                 const response = await createTrip(formDataToSend);
                 console.log("Trip created successfully:", response);
-                // Fetch the updated trips list
-                fetchUpdatedTrips();
+                fetchUpdatedTrips(); // Fetch the updated trips list
             } catch (error) {
                 console.error("Error creating trip:", error);
             }
@@ -175,6 +193,7 @@ export const TripProvider = ({ children }) => {
             longitude: "",
             images: [], // Reset images after submission
             duration: "", // Reset duration after submission
+            deletedImageIndexes: [], // Reset deleted images list
         });
         setModalOpen(false); // Close modal after submission
         setIsSubmitting(false);
@@ -230,9 +249,9 @@ export const TripProvider = ({ children }) => {
             setIsSubmitting(true);
             // Call the API to delete the trip
             await deleteTrip(id); // Assuming deleteTripApi is your API function for deleting trips
-            
+
             console.log(`Trip with ID ${id} deleted successfully`);
-    
+
             // Fetch the updated trips list
             fetchUpdatedTrips(); // This will re-fetch and re-sort the trips
         } catch (error) {
