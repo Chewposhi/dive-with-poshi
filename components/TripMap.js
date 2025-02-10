@@ -59,7 +59,7 @@ const MapComponent = () => {
       <h3 className="text-3xl py-4 text-teal-900 dark:text-teal-400 font-medium font-semibold text-center">
         My Trips
       </h3>
-      <MapContainer center={position} zoom={5} style={{ height: '600px', width: '100%', zIndex: '5' }}> {/* Increased height */}
+      <MapContainer center={position} zoom={5} style={{ height: '60vh', width: '100%', zIndex: '5' }}> {/* Increased height */}
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
         {trips.map((trip, index) => (

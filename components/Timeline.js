@@ -97,6 +97,7 @@ const Timeline = () => {
                                     border: '4px solid rgb(38, 116, 56)',
                                     borderRadius: '8px',
                                     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+                                    padding:'0',
                                 }}
                                 contentArrowStyle={{ borderRight: '14px solid #0D9488' }}
                             >

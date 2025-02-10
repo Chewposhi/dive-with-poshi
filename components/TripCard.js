@@ -71,7 +71,7 @@ const TripCard = ({ trip, handleEditPost, handleDeletePost, isSubmitting }) => {
   };
 
   return (
-    <div className="trip-card bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg mb-6 relative">
+    <div className="trip-card bg-white dark:bg-gray-800 p-2 rounded-md shadow-lg relative">
       <div className="flex justify-between items-center">
         <div>
           <h4 className="text-xl font-semibold text-teal-900 dark:text-teal-400">{trip.title}</h4>
@@ -136,7 +136,7 @@ const TripCard = ({ trip, handleEditPost, handleDeletePost, isSubmitting }) => {
       </div>
 
       {trip.images && trip.images.length > 0 ? (
-        <div className="mt-4">
+        <div className="mt-1">
           <Slider {...sliderSettings}>
             {trip.images.map((image, index) => (
               <div key={index} className="w-full">
@@ -151,7 +151,7 @@ const TripCard = ({ trip, handleEditPost, handleDeletePost, isSubmitting }) => {
           </Slider>
         </div>
       ) : (
-        <p className="text-gray-500 dark:text-gray-300 mt-4">No images available</p>
+        <p className="text-gray-500 dark:text-gray-300 mt-1">No images available</p>
       )}
 
       {/* Modal */}
