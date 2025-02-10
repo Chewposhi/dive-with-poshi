@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useRouter } from "next/router"; // Import useRouter
 import { TripContext } from "../context/TripContext";
 import { GiDivingHelmet } from "react-icons/gi";
 import { MdAddPhotoAlternate } from "react-icons/md";
@@ -9,6 +10,7 @@ import LocationSearch from "./LocationSearch"; // Location search component
 import { ClipLoader } from 'react-spinners'; // Importing a spinner component from react-spinners
 
 const Timeline = () => {
+    const router = useRouter(); // Get router object to access the URL
     const {
         formData,
         handleInputChange,
@@ -50,14 +52,19 @@ const Timeline = () => {
         await handleFormSubmit(e);
     };
 
+    // Check if we're in the /admin route
+    const isAdminPage = router.pathname === "/poshi"; // Check if current URL is /admin
+
     return (
         <div className="flex flex-col items-center relative">
-            <button
-                onClick={handleModalOpen}
-                className="bg-teal-600 dark:bg-teal-500 text-white rounded-full p-4 shadow-lg z-20 hover:bg-teal-700 dark:hover:bg-teal-600 transition-all"
-            >
-                <GiDivingHelmet size={40} />
-            </button>
+            {isAdminPage && (
+                <button
+                    onClick={handleModalOpen}
+                    className="bg-teal-600 dark:bg-teal-500 text-white rounded-full p-4 shadow-lg z-20 hover:bg-teal-700 dark:hover:bg-teal-600 transition-all"
+                >
+                    <GiDivingHelmet size={40} />
+                </button>
+            )}
 
             {/* Show a loading spinner while trips are being fetched */}
             {isLoading ? (
@@ -98,6 +105,7 @@ const Timeline = () => {
                                     handleEditPost={handleEditPost}
                                     handleDeletePost={() => handleDeleteTrip(trip.id)}
                                     isSubmitting={isSubmitting}
+                                    isAdmin={isAdminPage} // Pass isAdmin prop if it's the admin page
                                 />
                             </VerticalTimelineElement>
                         ))}

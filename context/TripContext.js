@@ -50,11 +50,11 @@ export const TripProvider = ({ children }) => {
 
     const handleModalOpen = () => {
         setModalOpen(true);
-        console.log("Modal opened.");
+        // console.log("Modal opened.");
     };
 
     const handleModalClose = () => {
-        console.log("Modal closed. Resetting form data.");
+        // console.log("Modal closed. Resetting form data.");
         setFormData({
             title: "",
             description: "",
@@ -73,7 +73,7 @@ export const TripProvider = ({ children }) => {
         const { name, value } = e.target;
         setFormData((prevData) => {
             const updatedData = { ...prevData, [name]: value };
-            console.log(`Form data updated - ${name}:`, updatedData); // Log input changes
+            // console.log(`Form data updated - ${name}:`, updatedData); // Log input changes
             return updatedData;
         });
     };
@@ -103,11 +103,11 @@ export const TripProvider = ({ children }) => {
     // Handle form submission (creating or editing trip data)
     const handleFormSubmit = async (e) => {
         e.preventDefault();
-        console.log("Form Data Submitted:", formData); // Log formData on submit
+        // console.log("Form Data Submitted:", formData); // Log formData on submit
         setIsSubmitting(true);
 
         // Log image compression process
-        console.log("Compressing images...");
+        // console.log("Compressing images...");
         const compressedImages = await Promise.all(
             formData.images.map(async (file) => {
                 const options = {
@@ -116,7 +116,7 @@ export const TripProvider = ({ children }) => {
                 };
                 try {
                     const compressedFile = await imageCompression(file, options);
-                    console.log("Compressed image:", compressedFile); // Log compressed image
+                    // console.log("Compressed image:", compressedFile); // Log compressed image
                     return compressedFile;
                 } catch (error) {
                     console.error("Image compression error:", error);
@@ -125,20 +125,20 @@ export const TripProvider = ({ children }) => {
             })
         );
 
-        console.log("Creating FormData to send to backend...");
+        // console.log("Creating FormData to send to backend...");
         // Create FormData to send to backend
         const formDataToSend = new FormData();
 
         // Log trip data
-        console.log("Appending trip data to FormData", {
-            title: formData.title,
-            description: formData.description,
-            date: formData.date,
-            location: formData.location,
-            latitude: formData.latitude,
-            longitude: formData.longitude,
-            duration: formData.duration,
-        });
+        // console.log("Appending trip data to FormData", {
+        //     title: formData.title,
+        //     description: formData.description,
+        //     date: formData.date,
+        //     location: formData.location,
+        //     latitude: formData.latitude,
+        //     longitude: formData.longitude,
+        //     duration: formData.duration,
+        // });
         formDataToSend.append('trip', new Blob([JSON.stringify({
             title: formData.title,
             description: formData.description,
@@ -150,24 +150,24 @@ export const TripProvider = ({ children }) => {
         })], { type: "application/json" }));
 
         // Log images and append them to FormData
-        console.log("Appending images to FormData");
+        // console.log("Appending images to FormData");
         compressedImages.forEach((image) => {
             formDataToSend.append('images', image);
-            console.log("Appended image:", image);
+            // console.log("Appended image:", image);
         });
 
         // Log deleted image indexes (if any)
         if (formData.deletedImageIndexes && formData.deletedImageIndexes.length > 0) {
-            console.log("Appending deleted image indexes:", formData.deletedImageIndexes);
+            // console.log("Appending deleted image indexes:", formData.deletedImageIndexes);
             formDataToSend.append('deletedImageIndexes', JSON.stringify(formData.deletedImageIndexes)); // Send deleted image indices
         }
 
         // Check if we are editing or creating a new trip
         if (formData.id) {
-            console.log(`Updating existing trip with ID: ${formData.id}`);
+            // console.log(`Updating existing trip with ID: ${formData.id}`);
             try {
                 const response = await updateTrip(formData.id, formDataToSend);
-                console.log("Trip updated successfully:", response);
+                // console.log("Trip updated successfully:", response);
                 fetchUpdatedTrips(); // Fetch the updated trips list
             } catch (error) {
                 console.error("Error updating trip:", error);
@@ -176,7 +176,7 @@ export const TripProvider = ({ children }) => {
             console.log("Creating a new trip...");
             try {
                 const response = await createTrip(formDataToSend);
-                console.log("Trip created successfully:", response);
+                // console.log("Trip created successfully:", response);
                 fetchUpdatedTrips(); // Fetch the updated trips list
             } catch (error) {
                 console.error("Error creating trip:", error);
@@ -202,7 +202,7 @@ export const TripProvider = ({ children }) => {
 
     // Handle editing an existing trip
     const handleEditPost = (trip) => {
-        console.log("Editing trip:", trip); // Log trip being edited
+        // console.log("Editing trip:", trip); // Log trip being edited
         setFormData(trip); // Populate the form with the selected trip data for editing
         setModalOpen(true); // Open modal for editing
     };
@@ -210,7 +210,7 @@ export const TripProvider = ({ children }) => {
     // Handle image change (multiple images upload)
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
-        console.log("Images selected:", files); // Log images selected
+        // console.log("Images selected:", files); // Log images selected
 
         if (formData.images.length + files.length > 8) {
             alert("You can only upload up to 8 images.");
@@ -225,7 +225,7 @@ export const TripProvider = ({ children }) => {
 
     // Handle location change (set location and convert it to coordinates)
     const handleLocationChange = async (location) => {
-        console.log("Location selected:", location); // Log location change
+        // console.log("Location selected:", location); // Log location change
         try {
             // Geocode the location to get coordinates
             const results = await geocodeByAddress(location);
@@ -238,7 +238,7 @@ export const TripProvider = ({ children }) => {
                 latitude: latLng.lat,
                 longitude: latLng.lng,
             });
-            console.log("Coordinates updated:", latLng); // Log coordinates
+            // console.log("Coordinates updated:", latLng); // Log coordinates
         } catch (error) {
             console.error("Error getting coordinates for location:", error);
         }
@@ -250,7 +250,7 @@ export const TripProvider = ({ children }) => {
             // Call the API to delete the trip
             await deleteTrip(id); // Assuming deleteTripApi is your API function for deleting trips
 
-            console.log(`Trip with ID ${id} deleted successfully`);
+            // console.log(`Trip with ID ${id} deleted successfully`);
 
             // Fetch the updated trips list
             fetchUpdatedTrips(); // This will re-fetch and re-sort the trips

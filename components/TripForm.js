@@ -48,7 +48,7 @@ const TripForm = () => {
     if (tripData) {
       setTripData(newTrip); // Update the trip in the state
     } else {
-      console.log('New Trip: ', newTrip); // Handle adding the trip (save to DB, etc.)
+      // console.log('New Trip: ', newTrip); // Handle adding the trip (save to DB, etc.)
     }
     closeModal();
   };

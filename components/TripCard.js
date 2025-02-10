@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/router"
 import { GiHamburgerMenu } from "react-icons/gi";
 import { FaCalendarAlt, FaMapMarkerAlt, FaHourglass } from "react-icons/fa";
 import Slider from "react-slick";
@@ -11,7 +12,8 @@ const TripCard = ({ trip, handleEditPost, handleDeletePost, isSubmitting }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false); // Track if delete is in progress
   const menuRef = useRef(null);
-
+  const router = useRouter();
+  const isAdminPage = router.pathname === "/poshi";
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
@@ -26,7 +28,7 @@ const TripCard = ({ trip, handleEditPost, handleDeletePost, isSubmitting }) => {
     // Optionally, show a confirmation before deleting
     if (window.confirm("Are you sure you want to delete this trip?")) {
       setIsDeleting(true); // Set deleting state
-      console.log("Deleting trip:", trip);
+      // console.log("Deleting trip:", trip);
       handleDeletePost(trip.id);
     }
   };
@@ -96,11 +98,11 @@ const TripCard = ({ trip, handleEditPost, handleDeletePost, isSubmitting }) => {
           </div>
         </div>
         <div className="absolute top-2 right-2">
-          <GiHamburgerMenu
+          {isAdminPage && <GiHamburgerMenu
             onClick={toggleMenu}
             aria-label="Toggle menu"
             className="cursor-pointer text-2xl text-teal-900 dark:text-teal-400"
-          />
+          />}
           {showMenu && (
             <div
               ref={menuRef}
