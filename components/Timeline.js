@@ -36,14 +36,16 @@ const Timeline = () => {
     // Handle image removal
     const handleRemoveImage = (index) => {
         const updatedImages = formData.images.filter((_, i) => i !== index);
-        // Update the formData state with the new list of images
+        const updatedDeletedIndexes = [...(formData.deletedImageIndexes || []), index];
+        
+        // Update the formData state with the new list of images and deleted image indexes
         handleInputChange({ target: { name: 'images', value: updatedImages } });
+        handleInputChange({ target: { name: 'deletedImageIndexes', value: updatedDeletedIndexes } });
     };
 
     // Handle Create or Edit Trip submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         // Call the shared form submit logic
         await handleFormSubmit(e);
     };
@@ -100,11 +102,6 @@ const Timeline = () => {
                             </VerticalTimelineElement>
                         ))}
                     </VerticalTimeline>
-
-
-
-
-
                 </div>
             )}
 

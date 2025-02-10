@@ -63,19 +63,13 @@ a {
   padding: 0;
 }
 
-/* Ensure Leaflet popups are responsive */
-.leaflet-popup-content {
-  width: 100% !important;
-  margin: 0;
-  padding: 0;
-}
-
 /* Custom class to control popup max width based on screen size */
 .custom-popup .popup-content {
   width: 100%;
   max-width: 400px; /* Default max width for larger screens */
 }
 
+/* Adjust max-width for smaller screens */
 @media (max-width: 768px) {
   .custom-popup .popup-content {
     max-width: 300px; /* Reduce max width on tablets */
@@ -178,4 +172,3 @@ button {
 button:hover {
   opacity: 0.8;
 }
-

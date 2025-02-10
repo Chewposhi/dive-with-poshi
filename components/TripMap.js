@@ -59,7 +59,7 @@ const MapComponent = () => {
       <h3 className="text-3xl py-4 text-teal-900 dark:text-teal-400 font-medium font-semibold text-center">
         My Trips
       </h3>
-      <MapContainer center={position} zoom={5} style={{ height: '600px', width: '100%', zIndex:'5' }}> {/* Increased height */}
+      <MapContainer center={position} zoom={5} style={{ height: '600px', width: '100%', zIndex: '5' }}> {/* Increased height */}
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
         {trips.map((trip, index) => (
@@ -68,7 +68,7 @@ const MapComponent = () => {
             position={{ lat: trip.latitude, lng: trip.longitude }}
             icon={scubaMaskIcon}
           >
-            <Popup className="custom-popup" maxWidth={400} minWidth={250}>
+            <Popup className="custom-popup" maxWidth="100%" minWidth="100%">
               <div className="popup-content w-full">
                 <h4 className="text-lg font-semibold text-teal-700 dark:text-teal-300">{trip.title}</h4>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">{trip.description}</p>
@@ -77,15 +77,15 @@ const MapComponent = () => {
                 <div className="text-sm text-gray-600 dark:text-gray-400 flex flex-col gap-1">
                   <div className="flex items-center space-x-2 mb-1">
                     <FaCalendarAlt className="text-teal-500 text-lg" />
-                    <h4 className="m-0 p-0">{formatDate(trip.date)}</h4> {/* Changed to h4, removed margin and padding */}
+                    <h4 className="m-0 p-0">{formatDate(trip.date)}</h4>
                   </div>
                   <div className="flex items-center space-x-2 mb-1">
                     <FaMapMarkerAlt className="text-teal-500 text-lg" />
-                    <h4 className="m-0 p-0">{trip.location}</h4> {/* Changed to h4, removed margin and padding */}
+                    <h4 className="m-0 p-0">{trip.location}</h4>
                   </div>
                   <div className="flex items-center space-x-2 mb-1">
                     <FaHourglass className="text-teal-500 text-lg" />
-                    <h4 className="m-0 p-0">{trip.duration} hours</h4> {/* Changed to h4, removed margin and padding */}
+                    <h4 className="m-0 p-0">{trip.duration} hours</h4>
                   </div>
                 </div>
 
